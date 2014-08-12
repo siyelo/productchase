@@ -49,4 +49,6 @@ group :development, :test do
   gem 'guard', '~> 2.6.1'
   gem 'guard-rspec', '~> 4.3.1'
   gem 'capybara', '~> 2.4.1'
+
+  gem 'shoulda', '~> 3.5.0'
 end
