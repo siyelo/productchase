@@ -1,0 +1,9 @@
+%h1 Home#index
+%p Find me in app/views/home/index.html.haml
+
+- unless current_user.nil?
+  = current_user.to_json
+  = form_for current_user, method: :delete, url: destroy_user_session_path do |f|
+    = f.submit 'Sign Out'
+- else
+  = link_to 'Sign In with Twitter', user_omniauth_authorize_path('twitter')

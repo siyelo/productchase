@@ -40,6 +40,9 @@ gem 'spring',        group: :development
 
 gem 'haml-rails', '~> 0.5.3'
 
+gem 'devise'
+gem 'omniauth-twitter'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.2'
 
