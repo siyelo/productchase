@@ -14,6 +14,11 @@ class LinkValidator < ActiveModel::Validator
 end
 
 class Product < ActiveRecord::Base
+  belongs_to :user
+
+  validates :user, presence: true
+  validates_associated :user
+
   validates :link, presence: true
 
   validates_with LinkValidator

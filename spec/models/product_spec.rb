@@ -2,6 +2,7 @@ require 'uri'
 require 'rails_helper'
 
 describe Product, :type => :model do
+  include UserSupport
   include ProductSupport
   include ValidationSupport
   include SanitationSupport
@@ -36,6 +37,23 @@ describe Product, :type => :model do
 
     it 'should allow a reasonable description' do
       validate_without_errors description: 'P' * 60
+    end
+
+    it 'should not allow a userless product' do
+      validate_with_errors user: nil
+    end
+
+    it 'should not allow a product with an invalid user' do
+      create_user
+
+      @user.password = 'pswd'
+
+      validate_with_errors user: @user
+    end
+
+    it 'should allow a product with a valid user' do
+      create_user
+      validate_without_errors user: @user
     end
   end
 

@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 describe ProductsController, :type => :controller do
+  include UserSupport
   include ProductSupport
 
   describe 'create' do
     before :all do
+      create_user
+
       @params =  {
           product: {
             link: 'http://github.com/hf/productchase',
@@ -14,7 +17,13 @@ describe ProductsController, :type => :controller do
       }
     end
 
+    after :all do
+      @user.destroy!
+    end
+
     it 'should create new product' do
+      sign_in @user
+
       post :create, @params
 
       product = assigns(:product)
@@ -28,6 +37,8 @@ describe ProductsController, :type => :controller do
     end
 
     it 'should not create a new product' do
+      sign_in @user
+
       @params[:product][:link] = ''
 
       post :create, @params
@@ -59,13 +70,27 @@ describe ProductsController, :type => :controller do
     before(:each) { create_product }
 
     it 'should edit a product' do
+      sign_in @user
+
       get :edit, { id: @product.id }
 
       expect(assigns(:product)).to eq @product
       expect(response).to render_template 'edit'
     end
 
-    it 'should not edit a product' do
+    it 'should not allow editing of another user\'s product' do
+      create_user :intruder
+
+      sign_in @user_intruder
+
+      get :edit, { id: @product.id }
+
+      expect(response).to have_http_status 404
+    end
+
+    it 'should not edit a product that does not exist' do
+      sign_in @user
+
       get :edit, { id: @product.id + 1000 }
 
       expect(assigns(:product)).to be_falsy
@@ -77,9 +102,14 @@ describe ProductsController, :type => :controller do
     before(:each) { create_product }
 
     it 'should update a product' do
+      sign_in @user
+
       @product.name = 'Updated Product Name'
 
-      post :update, { id: @product.id, product: @product.attributes }
+      product = @product.attributes
+      product.delete :user
+
+      post :update, { id: @product.id, product: product }
 
       product = assigns(:product)
 
@@ -90,18 +120,31 @@ describe ProductsController, :type => :controller do
     end
 
     it 'should not update a product due to non-existence' do
-      post :update, { id: @product.id + 1000, product: @product.attributes }
+      sign_in @user
+
+      product = @product.attributes
+      product.delete :user
+
+      post :update, { id: @product.id + 1000, product: product }
 
       expect(assigns(:product)).to be_falsy
       expect(response).to have_http_status 404
     end
 
     it 'should not update a product due to link uniqueness' do
-      another_product = Product.create! link: 'http://siyelo.com', name: 'Siyelo'
+      sign_in @user
+
+      another_product = Product.create! \
+        link: 'http://siyelo.com',
+        name: 'Siyelo',
+        user: @user
 
       @product.link = another_product.link
 
-      post :update, { id: @product.id, product: @product.attributes }
+      product = @product.attributes
+      product.delete :user
+
+      post :update, { id: @product.id, product: product }
 
       product = assigns(:product)
 
@@ -111,12 +154,29 @@ describe ProductsController, :type => :controller do
       expect(product.changed?).to be true
       expect(response).to render_template 'edit'
     end
+
+    it 'should not allow updating another user\'s product' do
+      create_user :intruder
+
+      sign_in @user_intruder
+
+      @product.name = 'Updated Product Name'
+
+      product = @product.attributes
+      product.delete :user
+
+      post :update, { id: @product.id, product: product }
+
+      expect(response).to have_http_status 404
+    end
   end
 
   describe 'destroy' do
     before(:each) { create_product }
 
     it 'should delete an existing product' do
+      sign_in @user
+
       delete :destroy, { id: @product.id }
 
       expect(assigns(:product).persisted?).to be false
@@ -124,9 +184,21 @@ describe ProductsController, :type => :controller do
     end
 
     it 'should not delete a non-existing product' do
+      sign_in @user
+
       delete :destroy, { id: @product.id + 1000 }
 
       expect(assigns(:product)).to be_falsy
+      expect(response).to have_http_status 404
+    end
+
+    it 'should not allow deleting another user\'s product' do
+      create_user :intruder
+
+      sign_in @user_intruder
+
+      delete :destroy, { id: @product.id }
+
       expect(response).to have_http_status 404
     end
   end
