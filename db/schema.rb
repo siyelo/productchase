@@ -13,6 +13,16 @@
 
 ActiveRecord::Schema.define(version: 20140818130928) do
 
+  create_table "products", force: true do |t|
+    t.string   "link",        null: false
+    t.string   "name",        null: false
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "products", ["link"], name: "index_products_on_link", unique: true
+
   create_table "users", force: true do |t|
     t.string   "encrypted_password",     default: "",                                                                                  null: false
     t.string   "reset_password_token"

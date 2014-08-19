@@ -1,0 +1,11 @@
+= form_for @product, html: { class: 'new_submission', id: 'new_submission' } do |f|
+  = f.text_field :link, autocomplete: 'off', class: 'product-url inputfield', id: 'submission_url', placeholder: "Product URL"
+  = render_errors :link, @product
+
+  = f.text_field :name, autocomplete: 'off', class: 'product-name inputfield', id: 'submission_name', placeholder: "Product Name"
+  = render_errors :name, @product
+
+  = f.text_field :description, autocomplete: 'off', class: 'product-tagline inputfield', id: 'submission_tagline', placeholder: "Tagline"
+  = render_errors :description, @product
+
+  = f.submit 'Chase It', class: 'new_post_submit'
