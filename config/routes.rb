@@ -1,7 +1,13 @@
 Rails.application.routes.draw do
+  #get 'vote/toggle'
+
   root 'home#index'
 
-  resources :products
+  resources :products do
+    member do
+      patch :vote
+    end
+  end
 
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 

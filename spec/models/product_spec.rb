@@ -9,6 +9,17 @@ describe Product, :type => :model do
 
   it { should validate_presence_of :link }
   it { should validate_presence_of :name }
+  it { should respond_to(:vote_users)}
+
+  describe "user that voted product" do
+    before do
+      create_user :vlatko
+      create_product
+      @user_vlatko.votes.create!(product: @product)
+    end
+
+    specify{expect(@product.vote_users).to include(@user_vlatko)}
+  end
 
   describe 'validations' do
     it 'should not allow invalid HTTP/HTTPS links' do
