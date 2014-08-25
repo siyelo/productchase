@@ -22,6 +22,9 @@ class Product < ActiveRecord::Base
   has_many :votes
   has_many :vote_users, through: :votes, source: :user
 
+  has_many :votes
+  has_many :vote_users, through: :votes, source: :user
+
   validates :user, presence: true
   validates_associated :user
 
