@@ -16,6 +16,9 @@ end
 class Product < ActiveRecord::Base
   belongs_to :user
 
+  has_many :votes
+  has_many :vote_users, through: :votes, source: :user
+
   validates :user, presence: true
   validates_associated :user
 
@@ -40,6 +43,10 @@ class Product < ActiveRecord::Base
     maximum: 60,
     too_long: 'Description is too long. Up to %{count} characters allowed.'
   }
+
+  def self.last_n_days n
+    Product.where(created_at: (n.days.ago.midnight..Time.now.utc)).order('created_at DESC')
+  end
 
   def name= name
     write_attribute :name, name.strip if name.respond_to? :strip

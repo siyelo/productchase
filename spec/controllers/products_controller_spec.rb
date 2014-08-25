@@ -4,6 +4,46 @@ describe ProductsController, :type => :controller do
   include UserSupport
   include ProductSupport
 
+  describe "toggle" do
+    before :all do
+      create_product
+
+      @params = {
+        id: @product.id
+      }
+    end
+
+    after :all do
+      @user.destroy!
+      @product.destroy!
+    end
+
+    it 'should create a new vote for user and product' do
+      sign_in @user
+
+      post :vote, @params
+
+      vote = assigns(:vote)
+
+      expect(vote.user).to eq @user
+      expect(vote.product).to eq @product
+
+      expect(response).to redirect_to @product
+    end
+
+    it 'should destroy an existing vote for user and product' do
+      existing_vote = Vote.create! user: @user, product: @product
+      sign_in @user
+
+      post :vote, @params
+
+      vote = assigns(:vote)
+      expect(vote.destroyed?).to be true
+      expect(@product.votes).to_not include(existing_vote)
+      expect(response).to redirect_to @product
+    end
+  end
+
   describe 'create' do
     before :all do
       create_user

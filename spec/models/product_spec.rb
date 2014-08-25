@@ -9,6 +9,17 @@ describe Product, :type => :model do
 
   it { should validate_presence_of :link }
   it { should validate_presence_of :name }
+  it { should respond_to(:vote_users)}
+
+  describe "user that voted product" do
+    before do
+      create_user :vlatko
+      create_product
+      @user_vlatko.votes.create!(product: @product)
+    end
+
+    specify{expect(@product.vote_users).to include(@user_vlatko)}
+  end
 
   describe 'validations' do
     it 'should not allow invalid HTTP/HTTPS links' do
@@ -68,6 +79,31 @@ describe Product, :type => :model do
           name: 'ProductChase',
           link: 'http://google.com/path',
           description: 'A truly lovely product.' }
+    end
+  end
+
+  describe 'last_n_days' do
+    before do
+      Timecop.freeze
+
+      create_user
+      @products = 20.times.map do |i|
+        Product.create! name: "PC#{i}", \
+          link: "http://example.com/#{i}",
+          user: @user,
+          created_at: rand(0..100).days.ago
+      end
+
+      @products = @products.sort_by { |p| p.created_at }.reverse
+    end
+
+    after do
+      Timecop.return
+    end
+
+    it 'should return a descending (by created_at) list of products for the last 3 days' do
+      expected_products = @products.delete_if { |p| p.created_at.midnight < 3.days.ago.midnight }
+      expect(Product.last_n_days(3) - expected_products).to eq []
     end
   end
 end

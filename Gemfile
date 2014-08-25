@@ -51,4 +51,6 @@ group :development, :test do
   gem 'capybara', '~> 2.4.1'
 
   gem 'shoulda', '~> 3.5.0'
+
+  gem 'timecop'
 end
