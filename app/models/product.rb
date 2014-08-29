@@ -15,6 +15,9 @@ end
 
 class Product < ActiveRecord::Base
   belongs_to :user
+  
+  has_many :votes
+  has_many :vote_users, through: :votes, source: :user
 
   validates :user, presence: true
   validates_associated :user

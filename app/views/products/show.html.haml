@@ -1,1 +1,51 @@
-= @product.to_json
+.show-post-modal
+  .modal-container
+    .comments-header
+      .top
+        %a{href: "#"}
+          %img.twitter-rounded.user-image{alt: @product.user.name, title: @product.user.name, height:"30", width:"30", src:@product.user.twitter_pic}
+        %span.posted-by
+          Posted by
+          =@product.user.name
+          =time_ago_in_words(@product.created_at)
+          ago
+        .socialbuttons
+        .clearfix
+        .border
+      .bottom
+        .product-top
+          .upvote
+            
+            %a.upvote-link{href: '#', onclick: 'document.getElementById(\'upvote\').submit();'}
+              
+              = form_for(@product, url: vote_product_path(@product), html: { style: 'display: none;', id: 'upvote' }) {}
+              
+            .vote-count
+              =@product.votes.count
+        .post-info
+          .post-url
+            =link_to @product.name, @product.link, target: "_blank"
+            %br
+            %span.post-tagline
+              =@product.description
+    .post-show
+      %div
+        .user-carousel
+          .header.clearfix
+            .arrows-html-holder
+              .prev-arrow
+                %a.fa-stack{href:"#"}
+                  %i.fa.fa-square.fa-stack-2x
+                  %i.fa.fa-angle-left.fa-stack-1x
+              .next-arrow
+                %a.fa-stack{href:"#"}
+                  %i.fa.fa-square.fa-stack-2x
+                  %i.fa.fa-angle-right.fa-stack-1x
+              .arrows
+            .title
+              %h2=pluralize(@product.votes.count,"upvote")
+          .slick-initialized.slick-slider
+            .slick-list.draggable{tabindex:"0"}
+              .slick-track{style:"width: 1210px; -webkit-transform: translate3d(0px, 0px, 0px); opacity: 1;"}
+                =render "products/user"
+

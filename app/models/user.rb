@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :products
+  has_many :votes
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -43,5 +44,9 @@ class User < ActiveRecord::Base
 
   def email_changed?
     false
+  end
+
+  def voted?(product)
+    votes.find_by(product: product)
   end
 end

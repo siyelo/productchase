@@ -16,6 +16,7 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.find_by! id: params[:id]
+    @users = @product.vote_users
   end
 
   def update
@@ -41,6 +42,20 @@ class ProductsController < ApplicationController
 
   def edit
     @product = Product.find_by! id: params[:id], user: current_user
+  end
+
+
+  def vote
+    @product = Product.find(params[:id])
+    @vote = current_user.votes.find_by(product: @product)
+
+    if @vote
+      @vote.destroy! 
+    else
+      @vote = current_user.votes.create(product: @product)
+    end
+
+    redirect_to @product
   end
 
   private
