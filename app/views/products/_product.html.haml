@@ -1,0 +1,24 @@
+%li.post
+  -if(current_user.vote_products.include?(product))
+    .upvote.voted
+      %a.upvote-link{href: "#", onclick: "document.getElementById('destroy_vote_#{product.name}').submit()"}
+        =form_for(current_user.votes.find_by(product: product), html:{method: :delete, style:"display: none", id: "destroy_vote_#{product.name}"}) do |f|
+          =f.hidden_field :user, value: @user.id
+      %span.vote-count=product.votes.count
+  -else
+    .upvote
+      %a.upvote-link{href:"#", onclick: "document.getElementById(\"create_vote_#{product.name}\").submit()"}
+        =form_for(current_user.votes.build(product: product), html:{style: "display: none;", id: "create_vote_#{product.name}"}) do |f|
+          =f.hidden_field :product, value: product.id
+          =f.hidden_field :user, value: @user.id
+          =f.submit "Vote"
+      %span.vote-count=product.votes.count      
+  .url
+    %a{class: "post-url title", href: "#{product.link}", target: "_blank"}=product.name
+    %span.post-tagline.description=product.description
+  %a.view-discussion{href: "#"}
+    =image_tag "comment-cloud.png", alt: "Comment", class: "comment-image"
+    %p.comment-count=23
+  .user-image-holder 
+    %a{href: user_path(product.user)}
+      %img.twitter-rounded.user-image{src: product.user.twitter_pic, height: "30", width: "30", alt: product.user.twitter_username}

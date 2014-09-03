@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   #get 'vote/toggle'
-
+  
   root 'home#index'
 
   resources :products do
@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+  resources :users, param: :twitter_username, path: ""
+  resources :votes, only: [:create, :destroy]
+  #match "/:twitter_username", to: "users#show", via: :get, as: "user_profile"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

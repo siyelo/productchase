@@ -42,6 +42,7 @@ gem 'haml-rails', '~> 0.5.3'
 
 gem 'devise'
 gem 'omniauth-twitter'
+gem 'route_downcaser'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.2'
