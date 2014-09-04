@@ -20,8 +20,6 @@ class User < ActiveRecord::Base
     user = User.find_by uid: auth.uid, provider: auth.provider
     return user unless user.nil?
 
-    pp auth.extra.raw_info
-
     user = User.create! uid: auth.uid, \
       provider: auth.provider,
       password: Devise.friendly_token,
