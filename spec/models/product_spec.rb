@@ -81,4 +81,29 @@ describe Product, :type => :model do
           description: 'A truly lovely product.' }
     end
   end
+
+  describe 'last_n_days' do
+    before do
+      Timecop.freeze
+
+      create_user
+      @products = 20.times.map do |i|
+        Product.create! name: "PC#{i}", \
+          link: "http://example.com/#{i}",
+          user: @user,
+          created_at: rand(0..100).days.ago
+      end
+
+      @products = @products.sort_by { |p| p.created_at }.reverse
+    end
+
+    after do
+      Timecop.return
+    end
+
+    it 'should return a descending (by created_at) list of products for the last 3 days' do
+      expected_products = @products.delete_if { |p| p.created_at.midnight < 3.days.ago.midnight }
+      expect(Product.last_n_days(3) - expected_products).to eq []
+    end
+  end
 end

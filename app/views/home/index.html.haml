@@ -1,13 +1,8 @@
-%h1 Home#index
-%p Find me in app/views/home/index.html.haml
+= render partial: 'header'
 
-- unless current_user.nil?
-  = current_user.to_json
-  %br
-  = form_for current_user, method: :delete, url: destroy_user_session_path do |f|
-    %br
-    = f.submit 'Sign Out'
-  %br
-  = link_to 'Add New Product', new_product_path
-- else
-  = link_to 'Sign In with Twitter', user_omniauth_authorize_path('twitter')
+.container-main.container
+  .yield-container
+    .posts-wrapper
+      .posts
+        - @products_by_day.each do |day, products|
+          = render partial: 'products/products', locals: { day: day, products: products }
