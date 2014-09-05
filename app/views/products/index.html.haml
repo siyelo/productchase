@@ -1,0 +1,6 @@
+- if @products_by_day.count < 1
+  .day
+    #no-more-products{ style: 'display: none;' }
+- else
+  - @products_by_day.each do |day, products|
+    = render partial: 'products', locals: { day: day, products: products }

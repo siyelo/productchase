@@ -11,17 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140822104354) do
+ActiveRecord::Schema.define(version: 20140905094215) do
 
   create_table "products", force: true do |t|
-    t.string   "link",        null: false
-    t.string   "name",        null: false
+    t.string   "link",         null: false
+    t.string   "name",         null: false
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
+    t.datetime "day_of_entry", null: false
   end
 
+  add_index "products", ["day_of_entry"], name: "index_products_on_day_of_entry"
   add_index "products", ["link"], name: "index_products_on_link", unique: true
   add_index "products", ["user_id"], name: "index_products_on_user_id"
 
