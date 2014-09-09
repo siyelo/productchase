@@ -1,3 +1,5 @@
+- maxdays = 10
+
 .day
   %time.date{ datetime: day }
     %h4.day-name= day_name day
@@ -5,9 +7,11 @@
     = day.strftime "%B #{day.day.ordinalize}"
 
   %ul.posts-group
-    - products.each do |product|
+    - products.each_with_index do |product, i|
       - onclick = "document.location='#{product_path(product)}';"
-      %li.post{ onclick: onclick }
+      - superfluous = !day.today? and i > 9 ? 'hidden-post' : ''
+
+      %li.post{ onclick: onclick, class: ('hidden-post' if !day.today? and i > maxdays - 1) }
         .upvote{ data: { type: 'post' } }
 
           - unless current_user.nil?
@@ -22,3 +26,7 @@
           = link_to product.name, product.link, class: 'post-url'
           %span.post-tagline= product.description
 
+  - if !day.today? and products.length > maxdays
+    %a.show-hidden-posts{ href: '#', onclick: 'showHiddenProducts()' }
+      %i.fa.fa-angle-down.fa-3
+      = "Show #{pluralize(products.length - maxdays, 'more product')}"
