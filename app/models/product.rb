@@ -15,7 +15,7 @@ end
 
 class Product < ActiveRecord::Base
   belongs_to :user
-  
+
   has_many :votes
   has_many :vote_users, through: :votes, source: :user
 
@@ -69,6 +69,8 @@ class Product < ActiveRecord::Base
   # usernames, passwords, ports, fragments, query strings. Also normalizes
   # strings so uniqueness can be observed.
   def sanitize link
+    link = "http://#{link.strip}" unless link.nil? or link =~ /\s*https?:\/\//i
+
     begin
       uri = URI.parse link
       %w{ fragment query user password userinfo port }.each { |p| uri.send "#{p}=", nil }

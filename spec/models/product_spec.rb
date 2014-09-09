@@ -30,6 +30,10 @@ describe Product, :type => :model do
       validate_without_errors link: 'HtTp://example.com'
     end
 
+    it 'should allow scheme-less links' do
+      validate_without_errors link: ' example.com '
+    end
+
     it 'should not allow short names' do
       validate_with_errors name: ''
     end
