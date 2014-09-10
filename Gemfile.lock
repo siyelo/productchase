@@ -228,8 +228,8 @@ DEPENDENCIES
   omniauth-twitter
   pg
   rails (= 4.1.4)
-  route_downcaser
   rails_12factor
+  route_downcaser
   rspec-rails (~> 3.0.2)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
