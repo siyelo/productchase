@@ -110,6 +110,7 @@ GEM
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
     orm_adapter (0.5.0)
+    pg (0.17.1)
     polyglot (0.3.5)
     pry (0.10.1)
       coderay (~> 1.1.0)
@@ -128,6 +129,11 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.4)
       sprockets-rails (~> 2.0)
+    rails_12factor (0.0.2)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.2)
+    rails_stdout_logging (0.0.3)
     railties (4.1.4)
       actionpack (= 4.1.4)
       activesupport (= 4.1.4)
@@ -190,8 +196,8 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
-    timers (4.0.0)
-      hitimes
+    timecop (0.7.1)
+    timers (1.1.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -220,13 +226,16 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   omniauth-twitter
+  pg
   rails (= 4.1.4)
   route_downcaser
+  rails_12factor
   rspec-rails (~> 3.0.2)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)
   shoulda (~> 3.5.0)
   spring
   sqlite3
+  timecop
   turbolinks
   uglifier (>= 1.3.0)

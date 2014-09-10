@@ -1,0 +1,24 @@
+.day
+  %time.date{ datetime: day }
+    %h4.day-name= day_name day
+
+    = day.strftime "%B #{day.day.ordinalize}"
+
+  %ul.posts-group
+    - products.each do |product|
+      - onclick = "document.location='#{product_path(product)}';"
+      %li.post{ onclick: onclick }
+        .upvote{ data: { type: 'post' } }
+
+          - unless current_user.nil?
+            %a.upvote-link{onclick: "event.stopPropagation(); document.getElementById('upvote-#{product.id}').submit();"}
+
+            = form_for(product, url: vote_product_path(product), html: { style: 'display: none;', id: "upvote-#{product.id}" }) {}
+          - else
+            %a.upvote-link{href: user_omniauth_authorize_path('twitter')}
+
+          %span.vote-count= product.votes.count
+        .url
+          = link_to product.name, product.link, class: 'post-url'
+          %span.post-tagline= product.description
+

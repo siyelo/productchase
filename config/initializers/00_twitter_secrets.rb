@@ -3,9 +3,7 @@ module TwitterSecrets
     config.before_configuration do
       secrets = Rails.root.join 'config', 'twitter_secrets.yml'
 
-      return unless File.exists? secrets
-
-      ENV.update YAML.load_file(secrets)
+      ENV.update YAML.load_file(secrets) if File.exists? secrets
     end
   end
 end
