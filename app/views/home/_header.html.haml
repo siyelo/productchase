@@ -15,7 +15,7 @@
           = link_to '+', new_product_path, class: 'new-post-link'
 
         %li.menu-parent
-          %a.user-image-menu{ href: '#' }
+          %a.user-image-menu{ href: user_path(current_user) }
             %img.twitter-rounded.user-image{ height: 30, width: 30, src: current_user.twitter_pic }
 
         %li

@@ -1,0 +1,10 @@
+-if current_user  
+  .upvote
+    %a.upvote-link{href:"#", onclick: "document.getElementById(\"create_vote_#{product.name}\").submit();"}
+      =form_for(current_user.votes.build(product: product), html:{class: "display-none", id: "create_vote_#{product.name}"}) do |f|
+        =f.hidden_field :product, value: product.id
+    %span.vote-count=product.votes.count
+-else
+  .upvote
+    %a.upvote-link{href: new_user_session_path}
+    %span.vote-count=product.votes.count
