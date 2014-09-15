@@ -2,7 +2,7 @@
   .modal-container
     .comments-header
       .top
-        %a{href: "#"}
+        %a{href: user_path(@product.user)}
           %img.twitter-rounded.user-image{alt: @product.user.name, title: @product.user.name, height:"30", width:"30", src:@product.user.twitter_pic}
         %span.posted-by
           Posted by
