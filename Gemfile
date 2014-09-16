@@ -28,6 +28,7 @@ gem 'haml-rails', '~> 0.5.3'
 
 gem 'devise'
 gem 'omniauth-twitter'
+gem 'route_downcaser'
 
 group :production do
   gem 'pg'

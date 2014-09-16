@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base
+  before_create :twitter_username_downcase
+
   has_many :products
   has_many :votes
+  has_many :vote_products, through: :votes, source: :product
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -14,7 +17,7 @@ class User < ActiveRecord::Base
 
   validates :uid, uniqueness: { scope: :provider, case_insensitive: true }
 
-  validates :twitter_username, uniqueness: { case_insensitive: true }
+  validates :twitter_username, uniqueness: { case_insensitive: true }, presence: true
 
   def self.find_or_create_for_oauth auth
     user = User.find_by uid: auth.uid, provider: auth.provider
@@ -47,4 +50,14 @@ class User < ActiveRecord::Base
   def voted?(product)
     votes.find_by(product: product)
   end
+
+  def to_param
+    twitter_username
+  end
+
+  private
+
+    def twitter_username_downcase
+      twitter_username.downcase!
+    end
 end
