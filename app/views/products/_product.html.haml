@@ -1,19 +1,9 @@
 %li.post
-  -if(current_user.vote_products.include?(product))
-    .upvote.voted
-      %a.upvote-link{href: "#", onclick: "document.getElementById('destroy_vote_#{product.name}').submit()"}
-        =form_for(current_user.votes.find_by(product: product), html:{method: :delete, class: "display-none", id: "destroy_vote_#{product.name}"}) do |f|
-          =f.hidden_field :user, value: @user.id
-      %span.vote-count=product.votes.count
+  -if current_user && current_user.vote_products.include?(product)
+    =render "products/upvote_voted", product: product
   -else
-    .upvote
-      %a.upvote-link{href:"#", onclick: "document.getElementById(\"create_vote_#{product.name}\").submit()"}
-        =form_for(current_user.votes.build(product: product), html:{class: "display-none", id: "create_vote_#{product.name}"}) do |f|
-          =f.hidden_field :product, value: product.id
-          =f.hidden_field :user, value: @user.id
-          =f.submit "Vote"
-      %span.vote-count=product.votes.count      
-  .url
+    =render "products/upvote", product: product      
+  .url 
     %a{class: "post-url title", href: "#{product.link}", target: "_blank"}=product.name
     %span.post-tagline.description=product.description
   %a.view-discussion{href: "#"}

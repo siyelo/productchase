@@ -1,0 +1,4 @@
+%a.upvote-link{href: '#', onclick: "document.getElementById(\"#{id_upvote}\").submit();"}
+  = form_for(@product, url: vote_product_path(@product), html: { class: "hide", id: id_upvote }) {}
+.vote-count
+  =@product.votes.count

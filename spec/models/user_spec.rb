@@ -2,8 +2,31 @@ require 'rails_helper'
 
 describe User, :type => :model do
   include UserSupport
+  include ProductSupport
   include SanitationSupport
   include ValidationSupport
+
+  describe "gives_vote_to" do
+    before :all do
+      create_product
+    end
+
+    let(:vote){@user.gives_vote_to @product}
+
+    after :all do
+      @user.destroy
+      @product.destroy
+    end
+
+    it "should respond to the method" do
+      expect(@user).to respond_to(:gives_vote_to)
+    end
+
+    it "vote should equal user" do
+      expect(vote.user).to eq @user
+      expect(vote.product).to eq @product 
+    end
+  end
 
   describe 'validations' do
     it 'should require presence of uid' do

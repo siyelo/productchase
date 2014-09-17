@@ -3,14 +3,12 @@ class VotesController < ApplicationController
 
   def create
     @product = Product.find(params[:vote][:product])
-    @vote = current_user.votes.create(product: @product)
-    @user = User.find(params[:vote][:user])
-    redirect_to @user
+    @vote = current_user.gives_vote_to(@product)
+    redirect_to :back
   end
 
   def destroy
     Vote.find(params[:id]).destroy
-    @user = User.find(params[:vote][:user])
-    redirect_to @user
+    redirect_to :back
   end
 end
