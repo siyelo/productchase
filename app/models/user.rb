@@ -47,6 +47,10 @@ class User < ActiveRecord::Base
     false
   end
 
+  def gives_vote_to(product)
+    votes.create(product: product)
+  end
+
   def voted?(product)
     votes.find_by(product: product)
   end

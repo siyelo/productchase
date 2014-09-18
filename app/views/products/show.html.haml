@@ -2,8 +2,9 @@
   .modal-container
     .comments-header
       .top
-        %a{href: user_path(@product.user)}
-          %img.twitter-rounded.user-image{alt: @product.user.name, title: @product.user.name, height:"30", width:"30", src:@product.user.twitter_pic}
+        .post-user
+          %a{href: user_path(@product.user)}
+            %img.twitter-rounded.user-image{alt: @product.user.name, title: @product.user.name, height:"30", width:"30", src:@product.user.twitter_pic}
         %span.posted-by
           Posted by
           =@product.user.name
@@ -14,20 +15,12 @@
         .border
       .bottom
         .product-top
-          .upvote
-            
-            %a.upvote-link{href: '#', onclick: 'document.getElementById(\'upvote\').submit();'}
-              
-              = form_for(@product, url: vote_product_path(@product), html: { style: 'display: none;', id: 'upvote' }) {}
-              
-            .vote-count
-              =@product.votes.count
+          %div{class: upvote_class}
+            =render "upvote_link_form"
         .post-info
-          .post-url
-            =link_to @product.name, @product.link, target: "_blank"
-            %br
-            %span.post-tagline
-              =@product.description
+          %a.post-url{href: @product.link, target: "_blank"}=@product.name
+          %br
+          %span.post-tagline.description=@product.description
     .post-show
       %div
         .user-carousel
@@ -48,4 +41,3 @@
             .slick-list.draggable{tabindex:"0"}
               .slick-track{style:"width: 1210px; -webkit-transform: translate3d(0px, 0px, 0px); opacity: 1;"}
                 =render "products/user"
-
