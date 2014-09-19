@@ -3,6 +3,15 @@ class ProductsController < ApplicationController
 
   before_action :authenticate_user!, except: :show
 
+  def index
+    days = params[:days].to_i
+    days = 3 if days < 1
+
+    @products_by_day = ProductGrouping.new Product.n_days_worth days
+
+    render layout: !request.xhr?
+  end
+
   def create
     @product = Product.new product_params
     @product.user = current_user
@@ -50,7 +59,7 @@ class ProductsController < ApplicationController
     @vote = current_user.votes.find_by(product: @product)
 
     if @vote
-      @vote.destroy! 
+      @vote.destroy!
     else
       @vote = current_user.votes.create(product: @product)
     end

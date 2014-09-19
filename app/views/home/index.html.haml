@@ -6,3 +6,4 @@
       .posts
         - @products_by_day.each do |day, products|
           = render partial: 'products/products', locals: { day: day, products: products }
+      %a#more{ href: '#' } Load More Products

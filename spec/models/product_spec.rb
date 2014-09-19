@@ -86,28 +86,45 @@ describe Product, :type => :model do
     end
   end
 
-  describe 'last_n_days' do
-    before do
-      Timecop.freeze
-
+  describe 'before_create' do
+    it 'should set day_of_entry to current day' do
       create_user
-      @products = 20.times.map do |i|
-        Product.create! name: "PC#{i}", \
-          link: "http://example.com/#{i}",
-          user: @user,
-          created_at: rand(0..100).days.ago
-      end
+      p = Product.create! name: 'ProductChase BC', link: 'http://github.com/hf/productchase/bc', user: @user
 
-      @products = @products.sort_by { |p| p.created_at }.reverse
+      expect(p.day_of_entry).to eq Time.zone.now.midnight
     end
+  end
 
-    after do
-      Timecop.return
+  describe 'nth_day' do
+    it 'should return the 3rd day of the products starting from today' do
+      create_user
+      products = [
+        Product.create!(name: 'PC ND 1', link: 'http://github.com/hf/productchase/nd1', user: @user),
+        Product.create!(name: 'PC ND 2', link: 'http://github.com/hf/productchase/nd2', user: @user, created_at: 1.day.ago, day_of_entry: 1.day.ago.midnight),
+        Product.create!(name: 'PC ND 3', link: 'http://github.com/hf/productchase/nd3', user: @user, created_at: 3.days.ago, day_of_entry: 3.days.ago.midnight)
+      ]
+
+      expect(Product.nth_day(3)).to eq (Time.zone.now - 3.days).midnight
     end
+  end
 
-    it 'should return a descending (by created_at) list of products for the last 3 days' do
-      expected_products = @products.delete_if { |p| p.created_at.midnight < 3.days.ago.midnight }
-      expect(Product.last_n_days(3) - expected_products).to eq []
+  describe 'n_days_worth' do
+    it 'should return 3 days worth of products starting from today and tomorrow' do
+      create_user
+
+      products = [
+        Product.create!(name: 'PC ND 1', link: 'http://github.com/hf/productchase/nd1', user: @user),
+        Product.create!(name: 'PC ND 2', link: 'http://github.com/hf/productchase/nd2', user: @user, created_at: 1.day.ago, day_of_entry: 1.day.ago.midnight),
+        Product.create!(name: 'PC ND 3', link: 'http://github.com/hf/productchase/nd3', user: @user, created_at: 3.days.ago, day_of_entry: 3.days.ago.midnight),
+        Product.create!(name: 'PC ND 4', link: 'http://github.com/hf/productchase/nd4', user: @user, created_at: 4.days.ago, day_of_entry: 4.days.ago.midnight)
+      ]
+
+      actual = Product.n_days_worth(3)
+
+      expect(actual.length).to eq (3)
+      expect(products - actual).to eq [products.last]
+
+      actual = Product.n_days_worth(3, 1.day.ago.midnight)
     end
   end
 end

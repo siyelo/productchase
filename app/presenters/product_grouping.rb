@@ -1,4 +1,6 @@
 class ProductGrouping
+  include Enumerable
+
   attr_reader :groups
   attr_reader :products
 
@@ -10,6 +12,10 @@ class ProductGrouping
                   { :day => e.first,
                     :entries => e.last.sort_by { |p| p.votes.count }.reverse }
                 end
+  end
+
+  def count
+    @groups.count
   end
 
   def each

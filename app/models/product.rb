@@ -22,6 +22,11 @@ class Product < ActiveRecord::Base
   has_many :votes
   has_many :vote_users, through: :votes, source: :user
 
+  has_many :votes
+  has_many :vote_users, through: :votes, source: :user
+
+  before_create :set_day_of_entry
+
   validates :user, presence: true
   validates_associated :user
 
@@ -47,8 +52,28 @@ class Product < ActiveRecord::Base
     too_long: 'Description is too long. Up to %{count} characters allowed.'
   }
 
-  def self.last_n_days n
-    Product.where(created_at: (n.days.ago.midnight..Time.now.utc)).order('created_at DESC')
+  def self.n_days_worth n = 3, offset = nil
+    offset ||= Time.zone.now
+
+    nth_day = Product.nth_day(n, offset)
+    nth_day ||= n.days.ago.midnight
+
+    Product.where('created_at >= :nth_day AND created_at <= :offset', offset: offset, nth_day: nth_day).order('created_at DESC')
+  end
+
+  def self.nth_day n, offset = nil
+    offset ||= Time.zone.now
+
+    ndays = Product.select(:day_of_entry).distinct
+          .where('created_at <= :offset', offset: offset)
+          .order('day_of_entry DESC')
+          .limit(n)
+
+    nth_day = ndays.last
+
+    return nth_day.day_of_entry unless nth_day.nil?
+
+    nil
   end
 
   def name= name
@@ -81,5 +106,9 @@ class Product < ActiveRecord::Base
     end
 
     link
+  end
+
+  def set_day_of_entry
+    self.day_of_entry ||= Time.zone.now.midnight
   end
 end
