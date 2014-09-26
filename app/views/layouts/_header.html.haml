@@ -19,9 +19,9 @@
             %img.twitter-rounded.user-image{ height: 30, width: 30, src: current_user.twitter_pic }
           .dropdown-user-menu.parent-menu
             %ul.parent-menu-ul
-              %li=link_to "My Profile", user_path(current_user)
-              %li=link_to "Settings", "#"
-              %li=link_to "Log out", destroy_user_session_path, method: :delete
+              %li=link_to "My Profile", user_path(current_user), class: "link-tag"
+              %li=link_to "Settings", edit_user_path(current_user), class: "link-tag"
+              %li=link_to "Log out", destroy_user_session_path, method: :delete, class: "link-tag"
       - else
         %li
           = link_to 'Log In', user_omniauth_authorize_path('twitter')

@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   validates :uid, uniqueness: { scope: :provider, case_insensitive: true }
 
   validates :twitter_username, uniqueness: { case_insensitive: true }, presence: true
+  validates :personal_title, length:{maximum: 40}
 
   def self.find_or_create_for_oauth auth
     user = User.find_by uid: auth.uid, provider: auth.provider
