@@ -15,6 +15,14 @@
 //= require turbolinks
 //= require_tree .
 
+function editComment(){
+  $(".delete_edit").hide();
+
+  $("div.comment-thread").hover(function(){
+      $(this).find(".delete_edit").toggle();
+  });
+};
+
 function ready(){
   $("a.user-image-menu").click(function(e){
     e.preventDefault()
@@ -23,7 +31,10 @@ function ready(){
 }
 
 function disappear(){
-	$('div.flash.flash-notice').delay(3000).fadeOut(1000);
+	$('div.flash.flash-notice').delay(1500).fadeOut(1000);
+  $('div.flash.flash-error').delay(1500).fadeOut(1000);
+  $('div.flash.flash-alert').delay(1500).fadeOut(1000);
+  $('div.flash.flash-success').delay(1500).fadeOut(1000);
 }
 
 function redirectToPage(e,url){
@@ -35,8 +46,10 @@ function redirectToPage(e,url){
 $(document).ready(function(){
 	ready();
 	disappear();
+  editComment();
 });
 $(document).on('page:load', function(){
 	ready();
 	disappear();
+  editComment();
 });

@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :products
   has_many :votes
   has_many :vote_products, through: :votes, source: :product
+  has_many :comments
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
