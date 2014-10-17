@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
 	before_action :authenticate_user!, except: :show
+  before_action :correct_user, except: :show
 
   def show 
     @user = User.find_by_twitter_username(params[:twitter_username])
@@ -25,5 +26,10 @@ class UsersController < ApplicationController
 
   def user_params
   	params.require(:user).permit(:personal_title)
+  end
+
+  def correct_user
+    @user = User.find_by_twitter_username(params[:twitter_username])
+    redirect_to root_path unless current_user == @user 
   end
 end

@@ -26,6 +26,8 @@ class ProductsController < ApplicationController
   def show
     @product = Product.find_by! id: params[:id]
     @users = @product.vote_users
+    @comment  = Comment.new(product: @product)
+    @comments = @product.comments
   end
 
   def update
