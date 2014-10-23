@@ -9,6 +9,7 @@ class CommentsController < ApplicationController
       redirect_to @product
     else
       @users = @product.vote_users
+      @comments = @product.comments
       render "products/show"
     end
   end
